@@ -1,5 +1,8 @@
 <template>
-    <main class="container">
+    <main id="app" class="container"><!-- #app определяет точку монтирования в index.html-->
+        <header class="header">
+            <h3>Utf-8 table converter</h3>
+        </header>
         <label class="mode-selector-wrapper">
             <select v-model="parsingMode" class="mode-selector">
                 <option value="JSON">JSON format</option>
@@ -15,7 +18,8 @@
         <div class="arrow"></div>
 
         <label class="output-textarea-wrapper">
-            <textarea class="output-textarea" :placeholder="outputPlaceholder" v-model="resultTable" readonly></textarea>
+            <textarea class="output-textarea" :placeholder="outputPlaceholder" v-model="resultTable"
+                      readonly></textarea>
         </label>
 
         <article class="format-description" v-html="formatDescription"></article>
@@ -34,8 +38,7 @@
     import {DataTable} from '@/core/tableType';
 
     @Component
-    export default // noinspection UnterminatedStatementJS,UnterminatedStatementJS
-    class InputOutputForm extends Vue {
+    export default class InputOutputForm extends Vue {
         // Какие виды стратегий обработки пользовательского вывода доступны?
         private static readonly StrategyVariants: Record<string, parserInterface> = {
             JSON: parserJSON,
@@ -91,15 +94,52 @@
     /* region arrangement of elements */
     /* Использовалось https://css-tricks.com/snippets/css/complete-guide-grid/ */
     .container {
+        height: 100%;
         display: grid;
-        grid-template-columns: auto
-            [input-textarea-start description-start] 30rem [input-textarea-end
-            arrow-start] 2rem [arrow-end
-            output-textarea-start] 30rem [output-textarea-end description-end] auto;
-        grid-template-rows: [mode-selector-top] 4rem [input-textarea-top arrow-top output-textarea-top] 20rem [input-textarea-bottom arrow-bottom output-textarea-bottom description-top] 5rem [description-bottom] auto;
+    }
+
+    /* Ноутбук */
+    @media screen and (min-width: 63rem) {
+        .container {
+            grid-template-columns:                    [begin] auto
+                     [input-textarea-start description-start] 30rem [input-textarea-end
+                                                 arrow-start] 2rem [arrow-end
+                                       output-textarea-start] 30rem [output-textarea-end
+                                             description-end] auto [end];
+            grid-template-rows:                  [header-top] 3rem [header-bottom
+                                           mode-selector-top] 3rem [
+            input-textarea-top arrow-top output-textarea-top] 20rem [input-textarea-bottom arrow-bottom output-textarea-bottom
+                                             description-top] 5rem [description-bottom
+                                                            ] auto;
+        }
+    }
+
+    /* Телефон */
+    @media screen and (max-width: 63rem) {
+        .container {
+            grid-template-columns:                    [begin] auto [
+                            input-textarea-start arrow-start
+                     output-textarea-start description-start] 30rem [input-textarea-end arrow-end
+                                                                     output-textarea-end description-end
+                                                            ] auto [end];
+            grid-template-rows:                  [header-top] 3rem [header-bottom
+                                           mode-selector-top] 3rem [
+                                         input-textarea-top ] 20rem [input-textarea-bottom
+                                                   arrow-top] 2rem [arrow-bottom
+                                         output-textarea-top] 20rem [output-textarea-bottom
+                                             description-top] 5rem [description-bottom
+                                                            ] auto;
+        }
+    }
+
+    .header {
+        grid-column: begin / end;
+        grid-row: header-top / header-bottom;
+        align-self: start;
     }
 
     .mode-selector-wrapper {
+        align-self: center;
         grid-column: input-textarea-start / input-textarea-end;
         grid-row: mode-selector-top / input-textarea-top;
     }
@@ -126,6 +166,37 @@
 
     /* endregion arrangement of elements */
 
+    /* region header */
+    .header {
+        background: hsl(089, 100%, 75%);
+        animation: animColor 300s linear infinite;
+    }
+
+    @keyframes animColor {
+        000% { background: hsl(089, 100%, 75%); }
+        010% { background: hsl(119, 100%, 75%); }
+        020% { background: hsl(149, 100%, 75%); }
+        030% { background: hsl(179, 100%, 75%); }
+        040% { background: hsl(209, 100%, 75%); }
+        050% { background: hsl(239, 100%, 75%); }
+        060% { background: hsl(269, 100%, 75%); }
+        070% { background: hsl(299, 100%, 75%); }
+        080% { background: hsl(329, 100%, 75%); }
+        090% { background: hsl(359, 100%, 75%); }
+        095% { background: hsl(029, 100%, 75%); }
+        100% { background: hsl(089, 100%, 75%); }
+    }
+
+    .header h3 {
+        margin: 0.7rem;
+    }
+    /* endregion header */
+
+    .container {
+        background-color: #ebebeb;
+    }
+
+    /* region selector */
     .mode-selector-wrapper {
         width: 20rem;
         height: 2rem;
@@ -140,46 +211,52 @@
         background-color: #ffffff;
     }
 
-    .mode-selector-wrapper:hover{
+    .mode-selector-wrapper:hover {
         background-image: url("./pseudo-selector-arrows-hover.png");
     }
 
     .mode-selector {
         -webkit-appearance: none;
-        color: #1476fb;
         background: none;
         border: none;
-        padding: 0.3rem;
         outline: none;
         width: 100%;
         height: 100%;
+        color: #1476fb;
+        padding: 0.3rem;
         font-size: 1rem;
     }
+    /* endregion selector */
 
+    /* region arrow */
     .arrow {
         background-repeat: no-repeat;
         background-size: 1.5rem 1.5rem;
         background-position: center center;
     }
 
-    @media screen and (max-width: 62.999rem) {
-        .arrow {
-            /* arrow-to-down */
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M7 9.586V3.949a1 1 0 0 1 2 0v5.637l1.344-1.344a1 1 0 0 1 1.414 1.414l-3.039 3.04a.997.997 0 0 1-1.438 0l-3.039-3.04a1 1 0 0 1 1.414-1.414L7 9.586z"></path></svg>');
-        }
-    }
-
-    @media screen and (min-width: 63rem){
+    /* Ноутбук */
+    @media screen and (min-width: 63rem) {
         .arrow {
             /* arrow-to-right */
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M12.696 7.256L9.657 4.217a1 1 0 0 0-1.415 1.414l1.344 1.344H3.949a1.001 1.001 0 0 0 0 2h5.637l-1.344 1.343a1.002 1.002 0 0 0 0 1.415c.391.39 1.024.39 1.415 0l3.039-3.04A.993.993 0 0 0 13 7.975a.997.997 0 0 0-.293-.708l-.011-.011z"></path></svg>');
         }
     }
 
+    /* Телефон */
+    @media screen and (max-width: 63rem) {
+        .arrow {
+            /* arrow-to-down */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M7 9.586V3.949a1 1 0 0 1 2 0v5.637l1.344-1.344a1 1 0 0 1 1.414 1.414l-3.039 3.04a.997.997 0 0 1-1.438 0l-3.039-3.04a1 1 0 0 1 1.414-1.414L7 9.586z"></path></svg>');
+        }
+    }
+    /* endregion arrow */
+
     .format-description {
-        padding: 0.5rem;
+        padding-top: 0.5rem;
     }
 
+    /* region textarea */
     .input-textarea, .output-textarea {
         background-color: white;
         border: none;
@@ -191,6 +268,10 @@
         box-sizing: border-box;
     }
 
+    .input-textarea::placeholder, .output-textarea::placeholder {
+        color: #909090;
+    }
+
     .input-textarea:focus {
         outline: none;
         box-shadow: 0 0 0 1px #1476fb;
@@ -199,8 +280,5 @@
     .output-textarea:focus {
         outline: none;
     }
-
-    textarea::placeholder {
-        color: #909090;
-    }
+    /* endregion textarea */
 </style>
