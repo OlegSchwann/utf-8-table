@@ -26,7 +26,11 @@ Write down your data: each row starts at the beginning of the line, cells separa
 const parser = (userText: string): DataTable => {
     // TODO: проверки?
     const clearedString: string = userText.trim().replace(/\t/, '    ');
-    return clearedString.split(/\n\r?/).map((row) => row.split(/\s*,\s*/));
+    return clearedString
+        .split(/\s*\n\s*/)
+        .map((row) => {
+            return row.split(/\s*,\s*/);
+        });
 };
 
 const parserCSV = new InputParser(

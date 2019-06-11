@@ -32,7 +32,11 @@ Write down your data in the most obvious way: each row starts at the beginning o
 const parser = (userText: string): DataTable => {
     // TODO: проверки?
     const clearedString: string = userText.trim().replace(/\t/, '    ');
-    return clearedString.split(/\n\r?/).map((row) => row.split(/\s+/));
+    return clearedString
+        .split(/\s*\n\s*/)
+        .map((row) => {
+            return row.split(/\s+/);
+        });
 };
 
 const parserSPACE = new InputParser(
