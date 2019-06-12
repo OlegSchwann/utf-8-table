@@ -266,6 +266,7 @@
         height: 100%;
         padding: 0.5rem;
         box-sizing: border-box;
+        font-family: "Courier New", monospace;
     }
 
     .input-textarea::placeholder, .output-textarea::placeholder {
